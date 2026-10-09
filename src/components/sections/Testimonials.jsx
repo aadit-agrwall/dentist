@@ -1,0 +1,26 @@
+import { useSiteMotion as useReducedMotion } from '../../hooks/useSiteMotion.js';
+import { INTERACTIONS } from '../../config/interactions';
+import { useEffect, useRef, useState } from 'react';
+import { animate, motion, useMotionValue } from 'framer-motion';
+import { ArrowLeft, ArrowRight, Quote, Star } from 'lucide-react';
+import { Badge, SectionHeading } from '../ui';
+import { TESTIMONIALS } from '../../config/content';
+import { MOTION } from '../../config/motion';
+const CAROUSEL={gap:24,threshold:60,velocityThreshold:450};
+export function Testimonials(){
+  const [hovered,setHovered]=useState(-1);
+  const [index,setIndex]=useState(1), [dimensions,setDimensions]=useState({viewport:0,card:0});
+  const viewport=useRef(null), card=useRef(null), x=useMotionValue(0), reduced=useReducedMotion();
+  useEffect(()=>{const observer=new ResizeObserver(()=>setDimensions({viewport:viewport.current.clientWidth,card:card.current.offsetWidth}));observer.observe(viewport.current);return()=>observer.disconnect();},[]);
+  const step=dimensions.card+CAROUSEL.gap, center=(dimensions.viewport-dimensions.card)/2;
+  useEffect(()=>{const controls=animate(x,center-index*step,reduced?{duration:0}:{type:'spring',...MOTION.spring});return()=>controls.stop();},[index,center,step,reduced,x]);
+  const change=value=>setIndex(Math.max(0,Math.min(TESTIMONIALS.length-1,value)));
+  return <section id="testimonials" className="section-space overflow-hidden"><div className="page-container"><SectionHeading align="center" eyebrow="Patient stories" title="A warm welcome." highlight="A familiar feeling." subtitle="A preview of how patient stories can appear on your clinic website. The following examples are fictional presentation copy."/><p className="mt-5 text-center text-[9px] uppercase tracking-widest text-ink/40">Fictional reviews for demo · Replace before publishing</p>
+    <div ref={viewport} role="region" aria-roledescription="carousel" aria-label="Demo patient stories" className="relative mt-12 overflow-hidden py-8"><motion.div drag="x" dragConstraints={{left:center-(TESTIMONIALS.length-1)*step,right:center}} dragElastic={.12} style={{x,gap:CAROUSEL.gap}} onDragEnd={(_,info)=>{if(info.offset.x<-CAROUSEL.threshold || info.velocity.x<-CAROUSEL.velocityThreshold)change(index+1);else if(info.offset.x>CAROUSEL.threshold || info.velocity.x>CAROUSEL.velocityThreshold)change(index-1);else animate(x,center-index*step,reduced?{duration:0}:{type:'spring',...MOTION.spring});}} className="flex w-max cursor-grab items-stretch active:cursor-grabbing" data-cursor="view">
+      {TESTIMONIALS.map((review,i)=><motion.article ref={i===0?card:undefined} key={review.name} onPointerEnter={event=>{if(event.pointerType!=='touch'&&!reduced)setHovered(i);}} onPointerLeave={()=>setHovered(-1)} animate={{scale:hovered===i?INTERACTIONS.cardHoverScale:index===i?1:.94,opacity:1,filter:hovered>=0&&hovered!==i?'brightness(.94)':'brightness(1)'}} transition={reduced?{duration:0}:MOTION.spring} aria-roledescription="slide" aria-label={`${i+1} of ${TESTIMONIALS.length}`} className={`glass testimonial-card flex w-[calc(100vw-64px)] max-w-[400px] shrink-0 select-none flex-col p-7 sm:w-[380px] sm:p-9 ${index===i?'!border-brand-200 shadow-soft-glow':''}`}>
+        <div className="flex items-center justify-between"><div className="flex gap-1" aria-label="5 stars">{Array.from({length:5},(_,star)=><Star key={star} size={13} className="fill-gold text-gold"/>)}</div><Quote size={27} strokeWidth={1} className="text-brand-200"/></div><blockquote className="mb-8 mt-7 flex-1 font-heading text-base font-medium leading-8 text-forest">“{review.quote}”</blockquote><div className="flex items-center gap-3 border-t border-brand-100 pt-6"><span role="img" aria-label={`Photo placeholder for ${review.name}`} className="reactive-avatar flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white bg-gradient-to-br from-brand-100 to-frost font-heading text-xs font-bold text-brand-700">{review.initials}</span><div><p className="font-heading text-xs font-bold text-forest">{review.name}</p><p className="mt-1.5 text-[10px] text-ink/55">{review.clinic}</p></div></div>
+      </motion.article>)}
+    </motion.div></div>
+    <div className="mt-4 flex items-center justify-center gap-6"><button aria-label="Previous testimonial" disabled={index===0} onClick={()=>change(index-1)} className="carousel-control"><ArrowLeft size={17}/></button><div className="flex items-center gap-2">{TESTIMONIALS.map((review,i)=><button key={review.name} aria-label={`Show testimonial ${i+1}`} aria-current={index===i?'true':undefined} onClick={()=>change(i)} className="flex h-8 w-6 items-center justify-center rounded-full transition-colors hover:bg-brand-50 active:bg-brand-100"><span className={`h-1.5 rounded-full transition-all ${index===i?'w-5 bg-brand-500':'w-1.5 bg-brand-200'}`}/></button>)}</div><button aria-label="Next testimonial" disabled={index===TESTIMONIALS.length-1} onClick={()=>change(index+1)} className="carousel-control"><ArrowRight size={17}/></button></div><p aria-live="polite" className="sr-only">Showing demo patient story {index+1} of {TESTIMONIALS.length}: {TESTIMONIALS[index].name}</p><p className="mt-5 text-center text-[10px] text-ink/40">Explore the sample stories. Real patient reviews can be added with consent.</p>
+  </div></section>;
+}

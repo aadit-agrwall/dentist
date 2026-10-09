@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env*
+!.env.example
+.DS_Store
+
+# Local QA screenshots are not part of the website.
+/*-preview.png
+/*-preview.jpg
+/*-preview.jpeg

@@ -1,0 +1,3 @@
+import { Accordion, Button, Reveal, SectionHeading } from '../ui';
+import { FAQS } from '../../config/content';
+export function FAQ(){return <section id="faq" className="section-space scroll-mt-28 border-y border-brand-100/60 bg-pearl/50"><div className="page-container grid gap-12 lg:grid-cols-[.9fr_1.1fr] lg:gap-20"><Reveal><SectionHeading eyebrow="A little more clarity" title="Good questions." highlight="Clear answers." subtitle="A little clarity before your visit. Here are some common questions patients ask our dental team."/><div className="mt-8"><Button href="#contact" variant="outline">Ask us about your visit</Button></div></Reveal><Reveal><Accordion items={FAQS} defaultOpen={0}/></Reveal></div></section>;}

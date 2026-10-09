@@ -1,0 +1,37 @@
+{
+  "name": "dental-clinical-luxury",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "node scripts/seo-assets.js && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test:geometry": "node --test tests/toothGeometry.test.js",
+    "test:appointment": "node --test tests/appointment.test.js",
+    "seo:assets": "node scripts/seo-assets.js"
+  },
+  "dependencies": {
+    "@react-three/drei": "^9.122.0",
+    "@react-three/fiber": "^8.18.0",
+    "@react-three/postprocessing": "^2.19.1",
+    "framer-motion": "^11.18.2",
+    "gsap": "^3.12.7",
+    "lenis": "^1.3.0",
+    "lucide-react": "^0.468.0",
+    "postprocessing": "^6.39.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-helmet-async": "^2.0.5",
+    "react-hook-form": "^7.54.2",
+    "react-hot-toast": "^2.5.2",
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.7.0",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.17",
+    "vite": "^6.4.1"
+  }
+}
